@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── AUTH ── -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-icon">✅</div>
+      <h1>TaskFlow</h1>
+      <p>Organize suas tarefas com simplicidade</p>
+    </div>
+
+    <div class="tab-toggle">
+      <button id="tab-login" class="active">Entrar</button>
+      <button id="tab-register">Criar conta</button>
+    </div>
+
+    <form id="form-login">
+      <div class="form-group">
+        <label>Email</label>
+        <input id="login-email" type="email" placeholder="seu@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input id="login-senha" type="password" placeholder="••••••" required />
+      </div>
+      <button id="btn-login" type="submit" class="btn-primary">Entrar</button>
+    </form>
+
+    <form id="form-register" style="display:none">
+      <div class="form-group">
+        <label>Nome</label>
+        <input id="reg-nome" type="text" placeholder="Seu nome" required />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input id="reg-email" type="email" placeholder="seu@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input id="reg-senha" type="password" placeholder="mínimo 6 caracteres" minlength="6" required />
+      </div>
+      <button id="btn-register" type="submit" class="btn-primary">Criar conta</button>
+    </form>
+
+    <div id="auth-alert" class="alert"></div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app-screen">
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">✅</div>
+        <span>TaskFlow</span>
+      </div>
+
+      <!-- Mini stats -->
+      <div class="sidebar-stats">
+        <div class="ss-title">Resumo</div>
+        <div class="ss-row">
+          <div class="ss-item">
+            <div class="ss-val" id="ss-pendente">0</div>
+            <div class="ss-lbl">Pendentes</div>
+          </div>
+          <div class="ss-item">
+            <div class="ss-val" id="ss-concluida">0</div>
+            <div class="ss-lbl">Concluídas</div>
+          </div>
+          <div class="ss-item">
+            <div class="ss-val" id="ss-cancelada">0</div>
+            <div class="ss-lbl">Canceladas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav filters -->
+      <div class="nav-section">
+        <span class="nav-label">Filtrar</span>
+        <div class="nav-item active" data-filter="todas">
+          <span class="icon">📋</span> Todas
+          <span class="nav-badge" id="badge-todas">0</span>
+        </div>
+        <div class="nav-item" data-filter="Pendente">
+          <span class="icon">⏳</span> Pendentes
+          <span class="nav-badge" id="badge-pendente">0</span>
+        </div>
+        <div class="nav-item" data-filter="Concluída">
+          <span class="icon">✅</span> Concluídas
+          <span class="nav-badge" id="badge-concluida">0</span>
+        </div>
+        <div class="nav-item" data-filter="Cancelada">
+          <span class="icon">❌</span> Canceladas
+          <span class="nav-badge" id="badge-cancelada">0</span>
+        </div>
+      </div>
+
+      <!-- Lembretes info -->
+      <div class="nav-section">
+        <span class="nav-label">Lembretes</span>
+        <div class="lembrete-list">
+          <div class="lembrete-item">
+            <div class="lembrete-dot" style="background:#6366f1"></div> Diário
+          </div>
+          <div class="lembrete-item">
+            <div class="lembrete-dot" style="background:#f59e0b"></div> Semanal
+          </div>
+          <div class="lembrete-item">
+            <div class="lembrete-dot" style="background:#22c55e"></div> Mensal
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="avatar" id="user-avatar">?</div>
+          <div>
+            <div class="user-name"  id="user-name">Usuário</div>
+            <div class="user-email" id="user-email-display"></div>
+          </div>
+        </div>
+        <button id="btn-logout" class="btn-logout">↩ Sair</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="page-header">
+        <h2>Minhas Tarefas</h2>
+        <p>Adicione, acompanhe e organize tudo que precisa fazer</p>
+      </div>
+
+      <!-- Add task -->
+      <div class="add-task-card">
+        <h3>➕ Nova Tarefa</h3>
+        <form class="add-form" id="add-task-form">
+          <div class="add-form-row">
+            <input id="task-titulo" type="text" placeholder="Título da tarefa…" required maxlength="100" />
+          </div>
+          <textarea id="task-descricao" placeholder="Descrição (opcional)…" rows="2"></textarea>
+          <div class="add-form-grid">
+            <div>
+              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px">Lembrete</label>
+              <select id="task-lembrete">
+                <option value="Nenhum">🔕 Nenhum</option>
+                <option value="Diário">🔔 Diário</option>
+                <option value="Semanal">🔔 Semanal</option>
+                <option value="Mensal">🔔 Mensal</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px">Data de vencimento</label>
+              <input id="task-data" type="date" />
+            </div>
+            <div style="display:flex;align-items:flex-end">
+              <button id="btn-add-task" class="btn-add" type="submit" style="width:100%">
+                + Adicionar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Task list -->
+      <div class="tasks-section">
+        <h3>
+          Tarefas
+          <span class="count" id="task-count">0</span>
+        </h3>
+        <div class="task-list" id="task-list">
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <p>Nenhuma tarefa ainda. Adicione sua primeira tarefa acima!</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="app.js"></script>
+</body>
+</html>
