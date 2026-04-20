@@ -1,7 +1,5 @@
-// Troque pela URL do Railway após o deploy (ex: https://seu-app.up.railway.app)
-const API = window.location.hostname === 'localhost'
-  ? 'http://localhost:8000'
-  : 'https://SEU-APP.up.railway.app';
+// Em produção o frontend é servido pelo mesmo app, então a URL é relativa
+const API = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
 
 // ── Storage ──────────────────────────────────────────
 const store = {

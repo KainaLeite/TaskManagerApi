@@ -17,7 +17,9 @@ class Lembrete(Enum):
     MENSAL   = "Mensal"
 
 
-db = create_engine("sqlite:///usuarios.db")
+import os
+_db_path = "/tmp/usuarios.db" if os.getenv("VERCEL") else "usuarios.db"
+db = create_engine(f"sqlite:///{_db_path}")
 Base = declarative_base()
 
 
