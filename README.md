@@ -35,7 +35,6 @@ PROJETOMEU/
 ├── config.py              # Carregamento de variáveis de ambiente
 ├── security.py            # Configuração do bcrypt
 ├── requirements.txt       # Dependências Python
-├── vercel.json            # Configuração de deploy na Vercel
 ├── Procfile               # Configuração para deploy no Heroku
 ├── models/
 │   └── models.py          # Modelos ORM (Usuario, Tarefa)
@@ -124,14 +123,6 @@ A aplicação estará disponível em `http://localhost:8000`.
 
 ## Deploy
 
-### Vercel
-
-O projeto está configurado para deploy na Vercel via `vercel.json`. O banco de dados usa `/tmp/usuarios.db` no ambiente serverless (armazenamento temporário).
-
-```bash
-vercel --prod
-```
-
 ### Heroku
 
 ```bash
@@ -141,4 +132,4 @@ git push heroku main
 
 ## Banco de Dados
 
-SQLite local (`usuarios.db`), criado automaticamente na primeira execução. Em produção na Vercel, o banco é recriado a cada cold start por limitação do armazenamento serverless.
+SQLite local (`usuarios.db`), criado automaticamente na primeira execução.
