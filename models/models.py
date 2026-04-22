@@ -18,8 +18,58 @@ class Lembrete(Enum):
 
 
 import os
-_db_path = "/tmp/usuarios.db" if os.getenv("VERCEL") else "usuarios.db"
-db = create_engine(f"sqlite:///{_db_path}")
+from dotenv import load_dotenv
+load_dotenv()
+
+_turso_url   = os.getenv("TURSO_DATABASE_URL")
+_turso_token = os.getenv("TURSO_AUTH_TOKEN")
+
+if _turso_url and _turso_token:
+    import asyncio
+    import libsql_client as _lc
+
+    class _Cursor:
+        description = None
+        rowcount = -1
+        lastrowid = None
+
+        def __init__(self): self._rows = []
+
+        def _run(self, sql, params=()):
+            _url = _turso_url.replace("libsql://", "https://")
+            async def _go():
+                async with _lc.create_client(_url, auth_token=_turso_token) as c:
+                    return await c.execute(sql, list(params))
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                return pool.submit(asyncio.run, _go()).result()
+
+        def execute(self, sql, parameters=()):
+            rs = self._run(sql, parameters)
+            self.description = [(col, None, None, None, None, None, None) for col in rs.columns] or None
+            self._rows = [tuple(r) for r in rs.rows]
+            self.rowcount = getattr(rs, "rows_affected", None) if not self._rows else len(self._rows)
+            self.lastrowid = getattr(rs, "last_insert_rowid", None)
+
+        def executemany(self, sql, seq):
+            for p in seq: self.execute(sql, p)
+
+        def fetchone(self): return self._rows.pop(0) if self._rows else None
+        def fetchall(self): r, self._rows = self._rows, []; return r
+        def fetchmany(self, n=None): r, self._rows = self._rows[:n], self._rows[n:]; return r
+        def close(self): pass
+
+    class _Connection:
+        def cursor(self): return _Cursor()
+        def commit(self): pass
+        def rollback(self): pass
+        def close(self): pass
+        def create_function(self, *a, **kw): pass
+
+    db = create_engine("sqlite://", creator=_Connection)
+# else:
+#     _db_path = "/tmp/usuarios.db" if os.getenv("VERCEL") else "usuarios.db"
+   # db = create_engine(f"sqlite:///{_db_path}")
 Base = declarative_base()
 
 
