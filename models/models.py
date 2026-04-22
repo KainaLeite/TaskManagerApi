@@ -67,9 +67,9 @@ if _turso_url and _turso_token:
         def create_function(self, *a, **kw): pass
 
     db = create_engine("sqlite://", creator=_Connection)
-else:
-    _db_path = "/tmp/task.db" if os.getenv("VERCEL") else "task.db"
-    db = create_engine(f"sqlite:///{_db_path}")
+# else:
+#     _db_path = "/tmp/task.db" if os.getenv("VERCEL") else "task.db"
+#     db = create_engine(f"sqlite:///{_db_path}")
 Base = declarative_base()
 
 
